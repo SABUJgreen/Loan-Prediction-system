@@ -1,38 +1,38 @@
-# Loan Prediction Classification
+# Loan Prediction Classification & Underwriting Dashboard
 
-A machine learning project that predicts whether a loan application will be approved (`Y`) or rejected (`N`) based on applicant profile, income, credit history, and property details.
+A machine learning project and interactive underwriting intelligence dashboard that predicts whether a loan application will be approved (`Y`) or rejected (`N`) based on applicant profile, income, credit history, and property details.
 
 ## Project Summary
 
-This repository contains an end-to-end classification workflow built around the classic loan approval dataset. The notebook follows the full ML pipeline:
+This repository contains an end-to-end classification workflow and interactive web dashboard built around the classic loan approval dataset. The pipeline follows:
 
 1. Load the training and test datasets
-2. Clean missing values
+2. Clean missing values and apply robust feature imputation
 3. Encode categorical variables into numeric form
-4. Explore feature relationships with correlation plots
-5. Compare multiple classification models
-6. Train a final Logistic Regression model
-7. Generate the submission file
+4. Explore feature relationships with correlation plots and distribution analysis
+5. Benchmark 8 classification models with 10-Fold Stratified Cross-Validation
+6. Provide an interactive Streamlit Underwriting Platform with real-time eligibility simulation
+7. Generate batch predictions on test applicants
 
 The final prediction file is saved as [`output.csv`](output.csv).
 
 ## Business Goal
 
-The goal is to estimate loan approval decisions automatically so that financial teams can make faster, more consistent screening decisions.
+The goal is to estimate loan approval decisions automatically so that financial teams can make faster, more consistent screening decisions, calculate borrower risk tiers, and identify key drivers of default.
 
 ## Dataset
 
 The dataset is stored in [`Dataset/`](Dataset/):
 
-- [`train.csv`](Dataset/train.csv) - labeled training data
-- [`test.csv`](Dataset/test.csv) - unlabeled test data used for prediction
+- [`train.csv`](Dataset/train.csv) - labeled training data (614 applications)
+- [`test.csv`](Dataset/test.csv) - unlabeled test data used for prediction (367 applications)
 - [`Sample_Submission.csv`](Dataset/Sample_Submission.csv) - reference submission format
 
 ### Target Variable
 
 - `Loan_Status`
-  - `Y` = loan approved
-  - `N` = loan rejected
+  - `Y` (1) = loan approved
+  - `N` (0) = loan rejected
 
 ### Main Features
 
@@ -49,35 +49,32 @@ The dataset is stored in [`Dataset/`](Dataset/):
 - `Credit_History`
 - `Property_Area`
 
-## Methodology
+## Interactive Web Dashboard
 
-The notebook keeps the original project logic while using cleaner modern Python syntax:
+The project features a **Streamlit & Plotly Underwriting Platform** (`app.py`):
 
-- Missing values are handled with median, mean, and random binary imputation where the original notebook used random filling
-- Categorical values are mapped to numeric labels
-- The combined train/test dataset is used for preprocessing
-- A train/test split is created from the labeled data
-- Several models are compared with cross-validation
-- Logistic Regression is used for the final prediction step
+1. **📊 Executive Portfolio KPIs**: Real-time metrics on approval rates (68.7%), average loan amount ($146,412), median applicant income, and property regional breakdowns.
+2. **🎯 Real-Time Loan Eligibility Simulator**: Enter applicant demographic and financial details to receive:
+   - Instant decision verdict (`APPROVED` / `REJECTED`)
+   - Model confidence gauge and risk tier classification (Prime, Near-Prime, High Risk)
+   - Estimated monthly EMI and Debt-to-Income / EMI ratio
+   - Factor audit highlighting positive credit drivers and risk warnings
+   - One-click JSON assessment report download
+3. **📈 Exploratory Data Analytics (EDA)**: Interactive correlation matrix, scatter plots of Income vs Loan Amount with approval status, loan term distributions, and demographic breakdowns.
+4. **⚖️ Model Benchmark Arena**: 10-fold cross-validated comparison across 8 classification algorithms (Logistic Regression, Linear Discriminant Analysis, SVC, Random Forest, Gradient Boosting, Decision Tree, KNN, Naive Bayes), interactive confusion matrix, feature importance rankings, and sensitivity threshold tuning.
+5. **📂 Batch Scoring & Dataset Explorer**: Live evaluation of the 367 test applications, search and filtering by status/property area, custom CSV uploader for batch scoring, and CSV export.
 
-## Results
+### Launching the Dashboard
 
-The generated submission in [`output.csv`](output.csv) contains predictions for 367 test applications.
+```bash
+# Install dependencies
+pip install -r requirements.txt
 
-- Approved loans: 281
-- Rejected loans: 86
+# Launch the Streamlit dashboard
+streamlit run app.py
+```
 
-### Output Preview
-
-| Loan_ID | Loan_Status |
-| --- | --- |
-| LP001015 | 1 |
-| LP001022 | 1 |
-| LP001031 | 1 |
-| LP001035 | 0 |
-| LP001051 | 1 |
-
-`1` means approved, `0` means rejected.
+*On Windows, you can also double-click `run_dashboard.bat`.*
 
 ## Visualizations
 
@@ -99,28 +96,22 @@ The generated submission in [`output.csv`](output.csv) contains predictions for 
 
 ## Project Files
 
-- [`Loan+Prediction.ipynb`](Loan+Prediction.ipynb) - main notebook
-- [`Loan+Prediction.py`](Loan+Prediction.py) - notebook export
+- [`app.py`](app.py) - Streamlit web dashboard application
+- [`ml_engine.py`](ml_engine.py) - modular ML engine, ensemble training, metrics, and inference pipeline
+- [`run_dashboard.bat`](run_dashboard.bat) - Windows launcher script
+- [`requirements.txt`](requirements.txt) - Python dependencies
+- [`Loan+Prediction.ipynb`](Loan+Prediction.ipynb) - main exploratory notebook
+- [`Loan+Prediction.py`](Loan+Prediction.py) - notebook export script
 - [`output.csv`](output.csv) - final predictions
 - [`assets/`](assets/) - visual summaries used in this README
 
-## How To Run
-
-1. Open [`Loan+Prediction.ipynb`](Loan+Prediction.ipynb) in Jupyter Notebook or JupyterLab.
-2. Make sure the dataset files are present in [`Dataset/`](Dataset/).
-3. Run the notebook cells from top to bottom.
-4. The final prediction file will be written to [`output.csv`](output.csv).
-
 ## Tech Stack
 
-- Python
+- Python 3.10+
+- Streamlit
+- Plotly
+- scikit-learn
 - pandas
 - NumPy
-- scikit-learn
 - seaborn
 - matplotlib
-
-## Notes
-
-- The project is intentionally kept close to the original notebook logic.
-- The README now includes the main output file and visual assets so recruiters can understand the project quickly without opening the notebook first.
